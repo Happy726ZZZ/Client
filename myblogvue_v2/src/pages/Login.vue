@@ -86,18 +86,22 @@ import {getRegister,UserLogin} from '../utils/server.js'
                 }
                 info.username=that.username;
                 info.password=that.password;
-                this.$http.post('http://localhost:8080/v2/auth/signin',info).then(res=>{
-                    var d =  eval('(' + res + ')');
-                    console.log(d.data.data.token);
-                    that.userToken = d.data.data.token;
+                //console.log("info");
+                var qs = require('querystring')
+                this.$http.post('/auth/signin',info,{
+                }).then(res=>{
+                    //console.log("get");
+                    //console.log("getinfo "+res.data.data);
+                    that.userToken = res.data.token;
                     that.changeLogin({ Authorization: this.userToken ,username: this.username});
                     this.$router.push('/v2/articles?page=1');
                   }).catch(err=>{
-                    console.log(err);
+                    console.log("err");
+                    //console.log("getinfo 1"+err.text());
                   });
                 //console.log(this.password);
                 //this.$http.post('/v2/auth/signin',info);
-                this.$router.replace('/v2/articles?page=1');
+                //this.$router.replace('/v2/articles?page=1');
             },
             registerEnterFun: function(e){
                 var keyCode = window.event? e.keyCode:e.which;

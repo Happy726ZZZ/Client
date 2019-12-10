@@ -25,15 +25,15 @@
                         <article class="">
                             <header>
                                 <div class="i-name">
-                                    {{item.contents.author}}
+                                    {{item.author}}
                                 </div>
                                 <div class="i-time">
-                                    <time>{{item.contents.date}}</time>
+                                    <time>{{item.date}}</time>
                                 </div>
                             </header>
                         </article>
                         <section>
-                            {{item.contents.content}}
+                            {{item.content}}
                         </section>
                     </li>
                 </ul>
@@ -78,7 +78,7 @@
                   }
                   obj.content=that.textarea;
                   obj.author = localStorage.getItem('username');
-                  this.$http.post('http://localhost:8080/v2/article/'+id+'/comment',obj);
+                  this.$http.post('/article/'+id+'/comment',obj);
                   that.textarea = '';
               }else{
                   that.sendTip = '内容不能为空~'
@@ -90,16 +90,16 @@
           },
           getcommentdata() {
             var id=this.$route.params.id;
-            var path='http://localhost:8080/v2/article/';
+            var path='/article/';
             path+=id;
             path+='/comments';
             console.log(path);
             let that = this;
             this.$http.get(path)
             .then(function(res){
-                var d =  eval('(' + res + ')');
-                that.commentList=d.data.data;
-                //console.log(that.commentList);
+                console.log(res.data);
+                that.commentList=res.data.contents;
+                
             })
             .catch(function(err) {
                 console.log("error:"+err);

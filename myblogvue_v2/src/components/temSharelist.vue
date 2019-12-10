@@ -3,16 +3,16 @@
     <el-row class="sharelistBox">
         <el-col :span="24" class="s-item tcommonBox" v-for="(item,index) in data" :key="index">
             <span class="s-round-date">
-                <span class="month">{{item.Articles.tag}}</span>
+                <span class="month">{{item.tag}}</span>
             </span>
             <header>
                 <h1>
-                    {{item.Articles.name}}
+                    {{item.name}}
                 </h1>
             </header>
             <section></section>
             <div class="viewdetail">
-                <a class="tcolors-bg" :href="'#/v2/article/'+item.Articles.id" target="_blank">
+                <a class="tcolors-bg" :href="'#/v2/article/'+item.id" target="_blank">
                     阅读全文>>
                 </a>
             </div>
@@ -46,7 +46,8 @@ export default {
             totalPage: 0,//当前条数
 
             msg: 'welcome to my blog',
-            data:[]
+            data:[],
+            tag:[]
         }
     },
     created:function(){
@@ -63,7 +64,8 @@ export default {
             let that=this;
             this.$http.get('http://localhost:8080/v2/article')
             .then(function(res){
-                var d =  eval('(' + res + ')');
+                //var d =  eval('(' + res + ')');
+                console.log(JSON.parse(res));
                 that.data=d.data.data;
             })
             .catch(function(err) {
@@ -77,18 +79,23 @@ export default {
         //请求数据
         dataListFn: function(index){
             console.log(index);
-            this.$http.get('/v2/articles?page='+index,
-            {
-                params:{
-                    page: index,
-                    limit:'10',
-                    state: 0
+            this.$http.get('/articles?page='+index).then(res => {
+                //var d =  eval('(' + res + ')');
+                console.log("get data");
+                //console.log(res.data);
+                this.data=res.data.Articles;
+                console.log(this.data);
+                for(var i=0;i<this.data.length;i++) {
+                    var s=this.data[i].name;
+                    var x1=s.indexOf("【");
+                    var x2=s.indexOf("】");
+                    var ss=s.substring(x1+1,x2);
+                    this.data[i].name=s.substring(x2+1,s.length);
+                    this.data[i].tag=ss;
                 }
-            }).then((res) => {
-                var d =  eval('(' + res + ')');
-                this.data=d.data.data;
-                //console.log(this.data);
-            });
+            }).catch(err=>{
+                console.log(err);
+            })
         },
         //分页
         btnClick: function(data){//页码点击事件
@@ -144,6 +151,10 @@ export default {
 </script>
 
 <style>
+
+.s-round-date span{
+    margin-top: 10px;
+}
 /*分享标题*/
 .shareTitle{
     margin-bottom: 40px;

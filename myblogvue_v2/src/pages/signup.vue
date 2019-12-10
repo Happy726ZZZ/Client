@@ -81,8 +81,9 @@ import {getRegister,UserLogin} from '../utils/server.js'
                 }
                 info.username=that.username;
                 info.password=that.password;
-                //console.log(this.password);
-                this.$http.post('http://localhost:8080/v2/auth/signup',info);
+                console.log(this.password);
+
+                this.$http.post('/auth/signup',info);
                 this.$router.replace('/v2/auth/signin');
             },
             registerEnterFun: function(e){
@@ -98,11 +99,11 @@ import {getRegister,UserLogin} from '../utils/server.js'
         },
         watch: {
            // 如果路由有变化，会再次执行该方法
-           '$route':'routeChange'
+           //'$route':'routeChange'
          },
         created() { //生命周期函数
             var that = this;
-            that.routeChange();
+            //that.routeChange();
         }
     }
 </script>

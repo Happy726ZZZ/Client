@@ -26,7 +26,7 @@ export default new Vuex.Store({
     		state.username = user.username;
     		localStorage.setItem('Authorization', user.Authorization);
     		localStorage.setItem('username', user.username);
-    		console.log('username '+user.username);
+    		//console.log('username '+user.username);
     	},
     	getusername(state) {
     		return state.username;

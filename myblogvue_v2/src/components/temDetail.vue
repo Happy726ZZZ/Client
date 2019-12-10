@@ -2,7 +2,7 @@
 <template>
         <div class="detailBox tcommonBox" >
             <span class="s-round-date">
-                <span class="month">{{aid}}</span>
+                <span class="month">{{detailObj.tag}}</span>
             </span>
              <header>
                 <h1>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import showdown from 'showdown'
     export default {
         data() { //选项 / 数据
             return {
@@ -33,15 +34,29 @@
         methods: { //事件处理器
             routeChange:function(){
                 var id=this.$route.params.id;
+
                 //console.log(id);
                 let that=this;
-                this.$http.get('http://localhost:8080/v2/article/'+id)
+                this.$http.get('/article/'+id)
                 .then(function(res){
-                    //console.log("getdata");
-                    var d =  eval('(' + res + ')');
-                    that.detailObj=d.data.data;
-                    that.aid=that.detailObj.tag.name;
-                    //console.log(that.aid);
+                    console.log(res.data);
+                    let Converter = new showdown.Converter();
+
+                    let html = Converter.makeHtml(res.data.content);
+                    //document.getElementsByClassName('article-content').innerHTML = html;
+                    
+                    that.detailObj=res.data;
+                    that.aid=that.detailObj.id;
+                    that.detailObj.content = html;
+
+                    var s=that.detailObj.name;
+                    var x1=s.indexOf("【");
+                    var x2=s.indexOf("】");
+                    var ss=s.substring(x1+1,x2);
+                    that.detailObj.name=s.substring(x2+1,s.length);
+                    that.detailObj.tag=ss;
+
+                    console.log(res.data);
                 })
                 .catch(function(err) {
                     console.log("error:"+err);
@@ -65,7 +80,9 @@
 </script>
 
 <style lang="less">
-
+.s-round-date span{
+    margin-top: 10px;
+}
 .detailBox .article-content{
     font-size: 15px;
     white-space: normal;

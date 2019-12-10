@@ -10,9 +10,11 @@ import store from './store'
 
 import axios from 'axios'
 //import './mock/mock.js'
+import showdown from 'showdown'
 
 Vue.use(axios)
 Vue.prototype.$http=axios;
+axios.defaults.baseURL = '/api'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -56,7 +58,7 @@ axios.interceptors.response.use(
 )
 //异步请求前判断请求的连接是否需要token
 router.beforeEach((to, from, next) => {
-  if (to.path === '/') {
+  if (to.path === '/') {//||to.path==='/v2/auth/signin'||to.path==='/v2/auth/signup'
     next();
   } else {
     let token = localStorage.getItem('Authorization');
